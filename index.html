@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MUHAMMED RISVAN</title>
+    <!-- Google Fonts for Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Use a custom Tailwind configuration for a cleaner look
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-brown': '#4b2b20',
+                        'dark-brown': '#2c2c2c',
+                        'accent-gold': '#ffcc00',
+                        'cta-blue': '#0077cc',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth scrolling behavior for a better user experience */
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-image: url('https://images.pexels.com/photos/935884/pexels-photo-935884.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Montserrat', sans-serif;
+            color: white;
+            position: relative;
+            overflow-x: hidden; /* Prevents horizontal scroll from fixed elements */
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* 🔹 Change text selection color for better visibility */
+        ::-moz-selection { /* Firefox */
+            background: #ffcc00;
+            color: white;
+        }
+
+        ::selection {
+            background: #534e38;
+            color: white;
+        }
+
+        /* 🔹 Custom styles for the navigation buttons */
+        .nav-button {
+            padding: 6px 12px;
+            transition: color 0.3s ease, border-color 0.3s ease;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            font-weight: 400; /* Ensure font weight is 400 */
+            cursor: pointer;
+        }
+
+        /* Styles for hover state only */
+        .nav-button:hover { color: #ffcc00; }
+
+        /* Styles for active state only, with the box/border */
+        .nav-button.active-nav { color: #ffcc00; border-color: #ffcc00; }
+
+        /* 🔹 New style for the bottom section to make it darker */
+        #about { background-color: rgba(104, 76, 76, 0.5); }
+
+        /* Custom styles for the music player */
+        .music-player-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .music-player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .music-player-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: white;
+            padding: 0.5rem;
+            font-size: 1.5rem;
+            border-radius: 9999px;
+            transition: background-color 0.2s;
+        }
+
+        .music-player-button:hover { background-color: rgba(255, 255, 255, 0.1); }
+
+        /* 🔹 Animations for the play/pause button */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 204, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+        }
+        .play-button-main.playing {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* 🔹 CSS for the audio visualizer */
+        .visualizer {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            width: 100px;
+            height: 30px;
+            gap: 4px;
+            margin-top: 1rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .visualizer.active {
+            opacity: 1;
+        }
+
+        .bar {
+            width: 4px;
+            background-color: #ffcc00;
+            border-radius: 2px;
+            transform-origin: bottom;
+            animation: bounce 0.8s ease-in-out infinite alternate;
+        }
+
+        .bar:nth-child(1) { animation-delay: 0s; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.6s; }
+        .bar:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes bounce {
+            0% { transform: scaleY(0.1); }
+            100% { transform: scaleY(1); }
+        }
+
+        /* New custom class for a subtle jump on hover */
+        .subtle-jump-on-hover {
+            transition: transform 0.4s ease-in-out;
+            display: inline-block; /* Required for transform to work on inline elements */
+            cursor: pointer;
+        }
+
+        .subtle-jump-on-hover:hover { transform: scale(1.07); }
+
+        .progress-bar-container {
+            width: 80%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 9999px;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: white;
+            border-radius: 9999px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .hidden-youtube {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        /* New styles for the goal section background effect */
+        #goal { position: relative; }
+
+        .goal-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #2c2c2c 50%, #7b4d3f 50%);
+            transform: scaleX(0); /* Start hidden */
+            transform-origin: left;
+            transition: transform 1s ease-in-out;
+            z-index: 5;
+        }
+
+        .goal-bg-overlay.visible { transform: scaleX(1); /* Wipes in */ }
+
+        /* Custom styles for the new JavaScript-based tooltip */
+        .js-tooltip {
+            position: absolute;
+            z-index: 1000; /* Increased z-index to ensure visibility */
+            background-color: #7b4d3f;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            max-width: 300px;
+            text-align: center;
+            transform: translate(-50%, -100%); /* Position above the element */
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .js-tooltip.visible { opacity: 1; }
+
+        .js-tooltip-image { width: 100%; height: auto; border-radius: 4px; object-fit: cover; }
+
+        .js-tooltip-text { font-size: 0.875rem; line-height: 1.4; }
+
+        /* New styles for the fade-in animation */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 🔹 Keyframe animation for the floating glow effect */
+        @keyframes float {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .floating-glow {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 204, 0, 0.2) 0%, rgba(255, 204, 0, 0) 70%);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        /* ----------------------------
+           RESPONSIVE OVERRIDES (only size/stacking; no structural/JS changes)
+           NOTE: Fixed three issues:
+             1) Escaped the w-1/2 class (must be .w-1\/2 in CSS selectors).
+             2) Removed overly-broad 'section { min-height: 100vh }' override.
+             3) Added a strong override for the album-art container (to override inline 500px size on small screens).
+           ---------------------------- */
+
+        /* Prevent images/iframes from overflowing on small screens */
+        img, iframe { max-width: 100%; height: auto; }
+
+        /* Make the two-column area in #goal stack on smaller screens
+           (escape the slash in the class name so selector is valid) */
+        @media (max-width: 1024px) {
+            /* On tablets and below, make both halves full width so content doesn't get cramped */
+            #goal .w-1\/2 { width: 100% !important; flex-basis: 100% !important; }
+            .progress-bar-container { width: 70% !important; max-width: 420px; }
+            .floating-glow { width: 360px; height: 360px; top: 12%; }
+        }
+
+        @media (max-width: 768px) {
+            /* Stop background-attachment fixed which can be problematic on many phones */
+            body { background-attachment: scroll !important; }
+
+            /* Strong override for the album-art container (it had inline width/height 500px) */
+            #goal .music-player-container > div {
+                width: 92% !important;
+                max-width: 420px !important;
+                height: auto !important;
+            }
+
+            /* Make the album art itself responsive and keep object-cover */
+            #album-art { width: 100% !important; height: auto !important; object-fit: cover; }
+
+            /* Slightly tighten nav spacing on small screens without changing look */
+            .nav-button { padding: 6px 10px !important; font-size: 0.95rem !important; }
+            nav { right: 0.75rem !important; top: 0.5rem !important; }
+
+            /* Make visualizer less wide on very small screens */
+            .visualizer { width: 80px !important; }
+
+            /* Make footer less tall on small screens */
+            footer { padding: 0.5rem !important; }
+            footer .max-w-3xl { font-size: 11px !important; }
+        }
+
+        @media (max-width: 420px) {
+            .floating-glow { width: 220px; height: 220px; top: 8%; }
+            /* Small-scale headings so they remain readable on tiny phones */
+            #intro-heading, #about-heading { font-size: 1.6rem !important; }
+            /* Slightly reduce progress bar container spacing */
+            .progress-bar-container { width: 85% !important; }
+        }
+        /* End responsive overrides */
+    </style>
+</head>
+<body>
+    <!-- 🔹 Floating Glow Element -->
+    <div class="floating-glow"></div>
+    
+    <!-- Top bar for consistent design -->
+    <div class="fixed top-0 left-0 right-0 h-10 bg-[#2c2c2c] rounded-b-full bg-opacity-70 backdrop-blur-sm z-40"></div>
+
+    <!-- 🔹 Navigation Bar using Tailwind classes -->
+    <nav class="fixed top-5 right-10 z-50">
+        <div class="flex space-x-4 md:space-x-6">
+            <!-- The 'active-nav' class is now managed by JavaScript -->
+            <button data-target="home" class="nav-button font-normal text-base md:text-lg">Home</button>
+            <button data-target="goal" class="nav-button font-normal text-base md:text-lg">Intro</button>
+            <button data-target="about" class="nav-button font-normal text-base md:text-lg">About</button>
+        </div>
+    </nav>
+
+    <!-- 🔹 Sections using Tailwind for responsiveness and layout -->
+    <section id="home" class="min-h-[150vh] flex flex-col items-center justify-center text-center p-4">
+        <h1 class="text-4xl md:text-6xl mb-6 subtle-jump-on-hover -mt-1" style="font-weight: 100; letter-spacing: 0.1em; text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);">M U H A M M E D&nbsp;&nbsp;R I S V A N</h1>
+        <p class="text-lg md:text-xl max-w-2xl -translate-y-8" style="font-weight: 100; letter-spacing: 0.07em;">
+            <span class="subtle-jump-on-hover">C O M P U T E R</span>&nbsp;&nbsp;&nbsp;
+            <span class="subtle-jump-on-hover">S C I E N C E</span>&nbsp;&nbsp;&nbsp;
+            <span class="subtle-jump-on-hover">S T U D E N T</span>&nbsp;&nbsp;&nbsp;
+            <span class="subtle-jump-on-hover">A N D</span>&nbsp;&nbsp;&nbsp;
+            <span class="subtle-jump-on-hover">A V I A T I O N</span>&nbsp;&nbsp;&nbsp;
+            <span class="subtle-jump-on-hover">E N T H U S I A S T</span>
+        </p>
+    </section>
+
+    <!-- 🔹 Updated Goal section with the two-color background and new text position -->
+    <section id="goal" class="min-h-[150vh] flex items-center justify-start">
+        <div class="goal-bg-overlay"></div>
+        <div id="intro-text" class="w-1/2 px-8 pt-32 text-left -translate-y-16" style="z-index: 10;">
+            <h1 id="intro-heading" class="text-4xl md:text-6xl font-extrabold mb-4 fade-in-up subtle-jump-on-hover" style="text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);">Personal Introduction</h1>
+            <p id="intro-paragraph" class="text-lg md:text-xl leading-relaxed fade-in-up" style="transition-delay: 0.2s;">
+            Hello! I’m Muhammad Risvan, a student from <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="Ambayathode is a small hilly locality in Koduvally block, Kozhikode district, Kerala, situated about 32 km east of Kozhikode city" >Amabayathode</span>, Thamarassery, located in Kozhikode, Kerala.
+My educational journey began at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="Nusrath Islamic Residential Higher Secondary School is located in Parappanpoyil, Kozhikode district, Kerala. It offers classes from Grade 1 to Grade 12, providing comprehensive education from primary to higher secondary level." data-tooltip-image="https://lh3.googleusercontent.com/p/AF1QipPf-QBwZlbvVjbH7akV_qoSmSDNt6Pu7Xl9q3sn=s1360-w1360-h1020-rw">Nusrath Islamic Residential HSS Parappanpoyil</span>, where I spent nine formative years from LKG to 7th grade. I then continued three enriching years at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="St. Mary’s HS Koodathai, established in 1946, is a private aided school in rural Koduvally, Kozhikode, offering classes from 1 to 12." data-tooltip-image="https://schoolwiki.in/images/b/bc/47070-5.jpg">St. Mary’s High School, Koodathai</span>, completing my 10th standard there. Currently, I am pursuing my 12th grade in Computer Science at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="GHSS KARUVANPOYIL was established in 2003 and it is managed by the Department of Education. It is located in Urban area. It is located in KODUVALLY block of KOZHIKODE district of Kerala. The school consists of Grades from LKG to 12." data-tooltip-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcSwkn3QsOHcDX7epSNJ57nx7W2fAqljuUa3QJB-Uf6et3wBd751fskkjcXGYCD-a7YXk&usqp=CAU">GHSS Karuvanpoyil</span>.
+
+Beyond academics, I am deeply passionate about aviation and aeronautical sciences, fields that inspire my curiosity about technology, engineering, and the future of flight. I aspire to channel this passion into a career that blends innovation with real-world impact—whether through piloting, aeronautical engineering, or contributing to advanced aerospace technologies.
+
+I am eager to explore opportunities that challenge me, help me grow, and ultimately allow me to play a role in shaping the next generation of aviation.
+            </p>
+        </div>
+
+        <!-- 🔹 Music Player -->
+        <div class="w-1/2 flex items-center justify-center p-4">
+            <div class="music-player-container">
+                <h2 class="text-2xl md:text-3xl font-extralight subtle-jump-on-hover">My Jam</h2>
+                <!-- The image src is now updated dynamically by JavaScript -->
+                <div class="w-full max-w-2xl flex-shrink-0 mt-8" style="height: 500px; width: 500px; cursor: pointer;">
+                    <img id="album-art" src="" alt="Album Art" class="w-full h-full rounded-lg shadow-xl shadow-black transition-opacity duration-500 object-cover transform transition-transform duration-300 hover:scale-105 hover:-translate-y-1">
+                </div>
+                <!-- 🔹 Animated Visualizer -->
+                <div id="visualizer" class="visualizer">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+
+                <div class="song-info text-center mt-4">
+                    <p class="text-base font-thin">Jhol</p>
+                </div>
+
+                <div class="progress-bar-container max-w-xs mt-12">
+                    <span id="current-time" class="text-sm font-thin">00:00</span>
+                    <div class="progress-bar">
+                        <div id="progress" class="progress"></div>
+                    </div>
+                    <span id="duration-time" class="text-sm font-thin">00:00</span>
+                </div>
+
+                <!-- Custom music player controls -->
+                <div class="music-player-controls">
+                    <button id="vol-down-btn" class="music-player-button subtle-jump-on-hover" aria-label="Volume down">-</button>
+                    <button id="play-pause-btn" class="music-player-button play-button-main subtle-jump-on-hover" aria-label="Play/Pause">✕</button>
+                    <button id="vol-up-btn" class="music-player-button subtle-jump-on-hover" aria-label="Volume up">+</button>
+                </div>
+
+                <!-- Hidden YouTube iframe -->
+                <iframe id="youtube-player" class="hidden-youtube" width="560" height="315" src="https://www.youtube.com/embed/BWczaSneA0Q?enablejsapi=1&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🔹 About Me section with fade-in-up animation on its child elements -->
+    <section id="about" class="min-h-[150vh] flex flex-col items-center justify-start text-center p-4">
+        <div class="w-full mt-24">
+            <h1 id="about-heading" class="text-4xl md:text-6xl font-extrabold mb-4 fade-in-up" style="text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);">About Me</h1>
+        </div>
+        <div id="about-boxes" class="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8 mt-12 w-full max-w-5xl">
+            <!-- First Box: Loved ones -->
+            <div class="flex-1 p-8 h-96 rounded-xl shadow-lg bg-gray-800 bg-opacity-50 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer fade-in-up">
+                <h2 class="text-3xl font-bold mb-4">Loved ones</h2>
+                <p class="text-sm md:text-base leading-relaxed text-center font-light">
+                    I share my life with my mother, father, and two younger sisters, whose support and encouragement mean everything to me.
+                </p>
+            </div>
+            <!-- Second Box: Interest -->
+            <div class="flex-1 p-8 h-96 rounded-xl shadow-lg bg-gray-800 bg-opacity-50 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer fade-in-up" style="transition-delay: 0.2s;">
+                <h2 class="text-3xl font-bold mb-4">Interest</h2>
+                <p class="text-sm md:text-base leading-relaxed text-center font-light">
+                    I enjoy creating and experimenting with mechanical designs, gaming concepts, and animation, as they allow me to express creativity through technology.
+                </p>
+            </div>
+            <!-- Third Box: Calling -->
+            <div class="flex-1 p-8 h-96 rounded-xl shadow-lg bg-gray-800 bg-opacity-50 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer fade-in-up" style="transition-delay: 0.4s;">
+                <h2 class="text-3xl font-bold mb-4">Calling</h2>
+                <p class="text-sm md:text-base leading-relaxed text-center font-light">
+                    I feel a strong calling to build a future in aerospace or cyber security, where I can apply my skills to solve challenges and make an impact.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🔹 Footer Bar with smooth curves -->
+    <footer class="bg-[#2c2c2c] p-4 text-center rounded-t-full bg-opacity-70 backdrop-blur-sm z-40 fixed bottom-0 left-0 right-0">
+        <div class="max-w-3xl mx-auto text-white text-xs cursor-pointer">
+            © 2025 Capnira. All rights reserved.<br>
+            Designed and Developed by MHD RISVAN.
+        </div>
+    </footer>
+
+    <script>
+        // -----------------------
+        // DOM references
+        // -----------------------
+        const navButtons = document.querySelectorAll(".nav-button");
+        const sections = document.querySelectorAll("section");
+        const playPauseBtn = document.getElementById("play-pause-btn");
+        const volDownBtn = document.getElementById("vol-down-btn");
+        const volUpBtn = document.getElementById("vol-up-btn");
+        const progressBar = document.getElementById("progress");
+        const currentTimeEl = document.getElementById("current-time");
+        const durationTimeEl = document.getElementById("duration-time");
+        const albumArt = document.getElementById("album-art");
+        const visualizer = document.getElementById("visualizer");
+        const goalBgOverlay = document.querySelector('.goal-bg-overlay');
+        const tooltipTargets = document.querySelectorAll(".tooltip-container");
+        const aboutHeading = document.getElementById('about-heading');
+        const aboutBoxes = document.getElementById('about-boxes');
+        const introHeading = document.getElementById('intro-heading');
+        const introParagraph = document.getElementById('intro-paragraph');
+
+        // -----------------------
+        // Create tooltip element immediately (fixes timing issue)
+        // -----------------------
+        let tooltipEl = document.createElement('div');
+        tooltipEl.className = 'js-tooltip';
+        document.body.appendChild(tooltipEl);
+
+        // Hide tooltip on scroll/resize for safety
+        window.addEventListener('scroll', () => tooltipEl.classList.remove('visible'), { passive: true });
+        window.addEventListener('resize', () => tooltipEl.classList.remove('visible'));
+
+        // -----------------------
+        // Tooltip listeners
+        // -----------------------
+        tooltipTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => {
+                const tooltipText = target.getAttribute('data-tooltip-text');
+                const tooltipImage = target.getAttribute('data-tooltip-image');
+
+                if (!tooltipText && !tooltipImage) return;
+
+                // Populate tooltip
+                tooltipEl.innerHTML = '';
+                if (tooltipImage) {
+                    const imgEl = document.createElement('img');
+                    imgEl.src = tooltipImage;
+                    imgEl.className = 'js-tooltip-image';
+                    tooltipEl.appendChild(imgEl);
+                }
+                if (tooltipText) {
+                    const textEl = document.createElement('span');
+                    textEl.className = 'js-tooltip-text';
+                    textEl.textContent = tooltipText;
+                    tooltipEl.appendChild(textEl);
+                }
+
+                // Position correctly (account for page scroll)
+                const rect = target.getBoundingClientRect();
+                const tooltipX = (rect.left + window.scrollX) + rect.width / 2;
+                const tooltipY = rect.top + window.scrollY;
+
+                tooltipEl.style.left = `${tooltipX}px`;
+                tooltipEl.style.top = `${tooltipY}px`;
+                tooltipEl.classList.add('visible');
+            });
+
+            target.addEventListener('mouseleave', () => {
+                tooltipEl.classList.remove('visible');
+            });
+        });
+
+        // -----------------------
+        // Random album art images
+        // -----------------------
+        const imageUrls = [
+            "https://images.pexels.com/photos/10230830/pexels-photo-10230830.jpeg",
+            "https://images.pexels.com/photos/2927080/pexels-photo-2927080.jpeg",
+            "https://images.pexels.com/photos/1716580/pexels-photo-1716580.jpeg",
+            "https://images.pexels.com/photos/6686455/pexels-photo-6686455.jpeg",
+            "https://images.pexels.com/photos/11970796/pexels-photo-11970796.jpeg"
+        ];
+
+        function setRandomImage() {
+            const randomIndex = Math.floor(Math.random() * imageUrls.length);
+            albumArt.src = imageUrls[randomIndex];
+        }
+
+        window.addEventListener("load", setRandomImage);
+
+        // -----------------------
+        // YouTube Player API logic
+        // -----------------------
+        let player;
+        let isPlaying = false;
+
+        // Called by YouTube API when ready (global name required)
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Play/pause button toggles playback
+            playPauseBtn.addEventListener("click", () => {
+                if (!player) return;
+                if (isPlaying) {
+                    player.pauseVideo();
+                } else {
+                    player.playVideo();
+                }
+            });
+
+            // Volume down functionality
+            volDownBtn.addEventListener("click", () => {
+                if (!player) return;
+                let currentVolume = player.getVolume();
+                if (typeof currentVolume === 'number' && currentVolume > 0) {
+                    player.setVolume(Math.max(0, currentVolume - 10));
+                }
+            });
+
+            // Volume up functionality
+            volUpBtn.addEventListener("click", () => {
+                if (!player) return;
+                let currentVolume = player.getVolume();
+                if (typeof currentVolume === 'number' && currentVolume < 100) {
+                    player.setVolume(Math.min(100, currentVolume + 10));
+                }
+            });
+
+            // Set initial duration display (may be 0 until playback)
+            const dur = player.getDuration() || 0;
+            durationTimeEl.textContent = formatTime(dur);
+        }
+
+        function onPlayerStateChange(event) {
+            // YT.PlayerState.PLAYING === 1
+            if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                playPauseBtn.textContent = "✓";
+                playPauseBtn.classList.add('playing');
+                visualizer.classList.add('active');
+                updateProgress(); // start progress loop
+            } else {
+                isPlaying = false;
+                playPauseBtn.textContent = "✕";
+                playPauseBtn.classList.remove('playing');
+                visualizer.classList.remove('active');
+            }
+        }
+
+        function updateProgress() {
+            if (!player || !isPlaying) return;
+
+            const duration = player.getDuration() || 0;
+            const currentTime = player.getCurrentTime() || 0;
+            const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+            progressBar.style.width = `${progressPercent}%`;
+
+            currentTimeEl.textContent = formatTime(currentTime);
+            durationTimeEl.textContent = formatTime(duration);
+
+            requestAnimationFrame(updateProgress);
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds) || seconds < 0) return "00:00";
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // -----------------------
+        // Navigation and Scroll Logic
+        // -----------------------
+        navButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                // Remove 'active-nav' from all buttons
+                navButtons.forEach(btn => btn.classList.remove("active-nav"));
+                // Add 'active-nav' to the clicked button
+                button.classList.add("active-nav");
+
+                const targetId = button.getAttribute("data-target");
+                const targetElement = document.getElementById(targetId);
+                const offset = 100;
+
+                if (!targetElement) return;
+
+                if (targetId === 'goal') {
+                    const targetPosition = targetElement.offsetTop;
+                    window.scrollTo({
+                        top: targetPosition + offset,
+                        behavior: "smooth"
+                    });
+                } else {
+                    targetElement.scrollIntoView({ behavior: "smooth" });
+                }
+            });
+        });
+
+        // Add a scroll event listener to highlight the active nav button
+        window.addEventListener("scroll", () => {
+            let current = '';
+            const scrollPos = window.scrollY + window.innerHeight / 2; // Check the position at the center of the viewport
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navButtons.forEach(button => {
+                button.classList.remove("active-nav");
+                if (button.getAttribute('data-target') === current) {
+                    button.classList.add('active-nav');
+                }
+            });
+
+            if (current === 'goal') {
+                goalBgOverlay.classList.add('visible');
+            } else {
+                goalBgOverlay.classList.remove('visible');
+            }
+
+            // Also ensure tooltip is hidden while scrolling (already attached earlier)
+        }, { passive: true });
+
+        // -----------------------
+        // Intersection Observer for fade-in effect on sections
+        // -----------------------
+        const elementsToAnimate = document.querySelectorAll('.fade-in-up');
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        elementsToAnimate.forEach(element => { observer.observe(element); });
+
+
+        // A separate observer for the goal section's background
+        const goalObserverElement = document.getElementById('goal');
+        const goalObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    goalBgOverlay.classList.add('visible');
+                } else {
+                    goalBgOverlay.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0.5 }); // A slightly higher threshold for the background
+
+        goalObserver.observe(goalObserverElement);
+
+        // -----------------------
+        // Load YouTube API script
+        // -----------------------
+        (function loadYouTubeAPI() {
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        })();
+
+    </script>
+</body>
+</html>
