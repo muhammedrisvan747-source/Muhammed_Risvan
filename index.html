@@ -285,12 +285,14 @@
         }
 
         /* ----------------------------
-           RESPONSIVE OVERRIDES (only size/stacking; no structural/JS changes)
-           NOTE: Fixed three issues:
-             1) Escaped the w-1/2 class (must be .w-1\/2 in CSS selectors).
-             2) Removed overly-broad 'section { min-height: 100vh }' override.
-             3) Added a strong override for the album-art container (to override inline 500px size on small screens).
+           NEW: Goal content layout helpers (desktop preserved, mobile enhanced)
            ---------------------------- */
+        .goal-content { display: flex; gap: 2rem; align-items: flex-start; width: 100%; max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .intro-column { width: 50%; padding-right: 2rem; z-index: 10; }
+        .music-column { width: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; }
+
+        /* Provide distinct backgrounds on mobile only (desktop remains visually similar to current) */
+        /* Mobile-specific styles below will apply when the viewport is small */
 
         /* Prevent images/iframes from overflowing on small screens */
         img, iframe { max-width: 100%; height: auto; }
@@ -308,15 +310,19 @@
             /* Stop background-attachment fixed which can be problematic on many phones */
             body { background-attachment: scroll !important; }
 
-            /* Strong override for the album-art container (it had inline width/height 500px) */
-            #goal .music-player-container > div {
-                width: 92% !important;
-                max-width: 420px !important;
-                height: auto !important;
-            }
+            /* Stack the goal content vertically on mobile and add distinct backgrounds */
+            .goal-content { flex-direction: column; align-items: stretch; padding: 1rem; gap: 1rem; }
+            .intro-column { width: 100% !important; padding: 1rem !important; background: rgba(44,44,44,0.92); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.45); transform: none !important; text-align: left; }
+            .music-column { width: 100% !important; padding: 1rem !important; background: rgba(123,77,63,0.92); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.45); margin-bottom: 1rem; }
 
+            /* Strong override for the album-art container (it had inline width/height 500px) */
+            #goal .music-player-container > div { width: 92% !important; max-width: 420px !important; height: auto !important; }
             /* Make the album art itself responsive and keep object-cover */
-            #album-art { width: 100% !important; height: auto !important; object-fit: cover; }
+            #album-art { width: 100% !important; height: auto !important; object-fit: cover; border-radius: 10px; }
+
+            /* Ensure intro text does not translate right on mobile and remains readable */
+            #intro-text { transform: none !important; padding-top: 1rem !important; }
+            #intro-heading, #about-heading { font-size: 1.8rem !important; }
 
             /* Slightly tighten nav spacing on small screens without changing look */
             .nav-button { padding: 6px 10px !important; font-size: 0.95rem !important; }
@@ -373,56 +379,60 @@
     <!-- 🔹 Updated Goal section with the two-color background and new text position -->
     <section id="goal" class="min-h-[150vh] flex items-center justify-start">
         <div class="goal-bg-overlay"></div>
-        <div id="intro-text" class="w-1/2 px-8 pt-32 text-left -translate-y-16" style="z-index: 10;">
-            <h1 id="intro-heading" class="text-4xl md:text-6xl font-extrabold mb-4 fade-in-up subtle-jump-on-hover" style="text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);">Personal Introduction</h1>
-            <p id="intro-paragraph" class="text-lg md:text-xl leading-relaxed fade-in-up" style="transition-delay: 0.2s;">
-            Hello! I’m Muhammad Risvan, a student from <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="Ambayathode is a small hilly locality in Koduvally block, Kozhikode district, Kerala, situated about 32 km east of Kozhikode city" >Amabayathode</span>, Thamarassery, located in Kozhikode, Kerala.
-My educational journey began at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="Nusrath Islamic Residential Higher Secondary School is located in Parappanpoyil, Kozhikode district, Kerala. It offers classes from Grade 1 to Grade 12, providing comprehensive education from primary to higher secondary level." data-tooltip-image="https://lh3.googleusercontent.com/p/AF1QipPf-QBwZlbvVjbH7akV_qoSmSDNt6Pu7Xl9q3sn=s1360-w1360-h1020-rw">Nusrath Islamic Residential HSS Parappanpoyil</span>, where I spent nine formative years from LKG to 7th grade. I then continued three enriching years at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="St. Mary’s HS Koodathai, established in 1946, is a private aided school in rural Koduvally, Kozhikode, offering classes from 1 to 12." data-tooltip-image="https://schoolwiki.in/images/b/bc/47070-5.jpg">St. Mary’s High School, Koodathai</span>, completing my 10th standard there. Currently, I am pursuing my 12th grade in Computer Science at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="GHSS KARUVANPOYIL was established in 2003 and it is managed by the Department of Education. It is located in Urban area. It is located in KODUVALLY block of KOZHIKODE district of Kerala. The school consists of Grades from LKG to 12." data-tooltip-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcSwkn3QsOHcDX7epSNJ57nx7W2fAqljuUa3QJB-Uf6et3wBd751fskkjcXGYCD-a7YXk&usqp=CAU">GHSS Karuvanpoyil</span>.
 
-Beyond academics, I am deeply passionate about aviation and aeronautical sciences, fields that inspire my curiosity about technology, engineering, and the future of flight. I aspire to channel this passion into a career that blends innovation with real-world impact—whether through piloting, aeronautical engineering, or contributing to advanced aerospace technologies.
+        <!-- Goal content wrapper: two columns on desktop, stacked on mobile -->
+        <div class="goal-content">
+            <div id="intro-text" class="intro-column px-8 pt-32 text-left -translate-y-16 fade-in-up" style="z-index: 10;">
+                <h1 id="intro-heading" class="text-4xl md:text-6xl font-extrabold mb-4 subtle-jump-on-hover" style="text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);">Personal Introduction</h1>
+                <p id="intro-paragraph" class="text-lg md:text-xl leading-relaxed" style="transition-delay: 0.2s; font-weight: 300;">
+                Hello! I’m Muhammad Risvan, a student from <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="Ambayathode is a small hilly locality in Koduvally block, Kozhikode district, Kerala, situated about 32 km east of Kozhikode city" >Amabayathode</span>, Thamarassery, located in Kozhikode, Kerala.
+    My educational journey began at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="Nusrath Islamic Residential Higher Secondary School is located in Parappanpoyil, Kozhikode district, Kerala. It offers classes from Grade 1 to Grade 12, providing comprehensive education from primary to higher secondary level." data-tooltip-image="https://lh3.googleusercontent.com/p/AF1QipPf-QBwZlbvVjbH7akV_qoSmSDNt6Pu7Xl9q3sn=s1360-w1360-h1020-rw">Nusrath Islamic Residential HSS Parappanpoyil</span>, where I spent nine formative years from LKG to 7th grade. I then continued three enriching years at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="St. Mary’s HS Koodathai, established in 1946, is a private aided school in rural Koduvally, Kozhikode, offering classes from 1 to 12." data-tooltip-image="https://schoolwiki.in/images/b/bc/47070-5.jpg">St. Mary’s High School, Koodathai</span>, completing my 10th standard there. Currently, I am pursuing my 12th grade in Computer Science at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="GHSS KARUVANPOYIL was established in 2003 and it is managed by the Department of Education. It is located in Urban area. It is located in KODUVALLY block of KOZHIKODE district of Kerala. The school consists of Grades from LKG to 12." data-tooltip-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcSwkn3QsOHcDX7epSNJ57nx7W2fAqljuUa3QJB-Uf6et3wBd751fskkjcXGYCD-a7YXk&usqp=CAU">GHSS Karuvanpoyil</span>.
 
-I am eager to explore opportunities that challenge me, help me grow, and ultimately allow me to play a role in shaping the next generation of aviation.
-            </p>
-        </div>
+    Beyond academics, I am deeply passionate about aviation and aeronautical sciences, fields that inspire my curiosity about technology, engineering, and the future of flight. I aspire to channel this passion into a career that blends innovation with real-world impact—whether through piloting, aeronautical engineering, or contributing to advanced aerospace technologies.
 
-        <!-- 🔹 Music Player -->
-        <div class="w-1/2 flex items-center justify-center p-4">
-            <div class="music-player-container">
-                <h2 class="text-2xl md:text-3xl font-extralight subtle-jump-on-hover">My Jam</h2>
-                <!-- The image src is now updated dynamically by JavaScript -->
-                <div class="w-full max-w-2xl flex-shrink-0 mt-8" style="height: 500px; width: 500px; cursor: pointer;">
-                    <img id="album-art" src="" alt="Album Art" class="w-full h-full rounded-lg shadow-xl shadow-black transition-opacity duration-500 object-cover transform transition-transform duration-300 hover:scale-105 hover:-translate-y-1">
-                </div>
-                <!-- 🔹 Animated Visualizer -->
-                <div id="visualizer" class="visualizer">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
+    I am eager to explore opportunities that challenge me, help me grow, and ultimately allow me to play a role in shaping the next generation of aviation.
+                </p>
+            </div>
 
-                <div class="song-info text-center mt-4">
-                    <p class="text-base font-thin">Jhol</p>
-                </div>
-
-                <div class="progress-bar-container max-w-xs mt-12">
-                    <span id="current-time" class="text-sm font-thin">00:00</span>
-                    <div class="progress-bar">
-                        <div id="progress" class="progress"></div>
+            <!-- 🔹 Music Player (right column on desktop; stacks below text on mobile) -->
+            <div class="music-column">
+                <div class="music-player-container">
+                    <h2 class="text-2xl md:text-3xl font-extralight subtle-jump-on-hover">My Jam</h2>
+                    <!-- The image src is now updated dynamically by JavaScript -->
+                    <div class="w-full max-w-2xl flex-shrink-0 mt-8" style="height: 500px; width: 500px; cursor: pointer;">
+                        <img id="album-art" src="" alt="Album Art" class="w-full h-full rounded-lg shadow-xl shadow-black transition-opacity duration-500 object-cover transform transition-transform duration-300 hover:scale-105 hover:-translate-y-1">
                     </div>
-                    <span id="duration-time" class="text-sm font-thin">00:00</span>
-                </div>
+                    <!-- 🔹 Animated Visualizer -->
+                    <div id="visualizer" class="visualizer">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
 
-                <!-- Custom music player controls -->
-                <div class="music-player-controls">
-                    <button id="vol-down-btn" class="music-player-button subtle-jump-on-hover" aria-label="Volume down">-</button>
-                    <button id="play-pause-btn" class="music-player-button play-button-main subtle-jump-on-hover" aria-label="Play/Pause">✕</button>
-                    <button id="vol-up-btn" class="music-player-button subtle-jump-on-hover" aria-label="Volume up">+</button>
-                </div>
+                    <div class="song-info text-center mt-4">
+                        <p class="text-base font-thin">Jhol</p>
+                    </div>
 
-                <!-- Hidden YouTube iframe -->
-                <iframe id="youtube-player" class="hidden-youtube" width="560" height="315" src="https://www.youtube.com/embed/BWczaSneA0Q?enablejsapi=1&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <div class="progress-bar-container max-w-xs mt-12">
+                        <span id="current-time" class="text-sm font-thin">00:00</span>
+                        <div class="progress-bar">
+                            <div id="progress" class="progress"></div>
+                        </div>
+                        <span id="duration-time" class="text-sm font-thin">00:00</span>
+                    </div>
+
+                    <!-- Custom music player controls -->
+                    <div class="music-player-controls">
+                        <button id="vol-down-btn" class="music-player-button subtle-jump-on-hover" aria-label="Volume down">-</button>
+                        <button id="play-pause-btn" class="music-player-button play-button-main subtle-jump-on-hover" aria-label="Play/Pause">✕</button>
+                        <button id="vol-up-btn" class="music-player-button subtle-jump-on-hover" aria-label="Volume up">+</button>
+                    </div>
+
+                    <!-- Hidden YouTube iframe -->
+                    <iframe id="youtube-player" class="hidden-youtube" width="560" height="315" src="https://www.youtube.com/embed/BWczaSneA0Q?enablejsapi=1&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
             </div>
         </div>
     </section>
