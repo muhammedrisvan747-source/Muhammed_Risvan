@@ -1,757 +1,1293 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>MUHAMMED RISVAN</title>
-    <!-- Google Fonts for Montserrat -->
+    <title>MUHAMMED RISVAN - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN for modern styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Use a custom Tailwind configuration for a cleaner look
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Montserrat', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary-brown': '#4b2b20',
-                        'dark-brown': '#2c2c2c',
-                        'accent-gold': '#ffcc00',
-                        'cta-blue': '#0077cc',
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <style>
-        /* Smooth scrolling behavior for a better user experience */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
         body {
-            background-image: url('https://images.pexels.com/photos/935884/pexels-photo-935884.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            font-family: 'Montserrat', sans-serif;
-            color: white;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            font-family: 'Inter', sans-serif;
+            color: #f1f5f9;
+            overflow-x: hidden;
             position: relative;
-            overflow-x: hidden; /* Prevents horizontal scroll from fixed elements */
         }
 
-        body::before {
-            content: '';
+        /* Animated gradient background */
+        .gradient-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
             z-index: -1;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
         }
 
-        /* 🔹 Change text selection color for better visibility */
-        ::-moz-selection { /* Firefox */
-            background: #ffcc00;
-            color: white;
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
-        ::selection {
-            background: #534e38;
-            color: white;
+        /* Floating orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
         }
 
-        /* 🔹 Custom styles for the navigation buttons */
-        .nav-button {
-            padding: 6px 12px;
-            transition: color 0.3s ease, border-color 0.3s ease;
-            border: 2px solid transparent;
-            border-radius: 6px;
-            font-weight: 400; /* Ensure font weight is 400 */
-            cursor: pointer;
+        .orb1 {
+            width: 500px;
+            height: 500px;
+            background: #3b82f6;
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
         }
 
-        /* Styles for hover state only */
-        .nav-button:hover { color: #ffcc00; }
+        .orb2 {
+            width: 400px;
+            height: 400px;
+            background: #8b5cf6;
+            bottom: -150px;
+            right: -150px;
+            animation-delay: 5s;
+        }
 
-        /* Styles for active state only, with the box/border */
-        .nav-button.active-nav { color: #ffcc00; border-color: #ffcc00; }
+        .orb3 {
+            width: 350px;
+            height: 350px;
+            background: #06b6d4;
+            top: 50%;
+            right: 10%;
+            animation-delay: 10s;
+        }
 
-        /* 🔹 New style for the bottom section to make it darker */
-        #about { background-color: rgba(104, 76, 76, 0.5); }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-50px, 50px) scale(0.9); }
+        }
 
-        /* Custom styles for the music player */
-        .music-player-container {
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 1rem;
-            position: relative;
-            z-index: 10;
+            padding: 1.2rem 2rem;
         }
 
-        .music-player-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .music-player-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: white;
-            padding: 0.5rem;
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.5rem;
-            border-radius: 9999px;
-            transition: background-color 0.2s;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .music-player-button:hover { background-color: rgba(255, 255, 255, 0.1); }
-
-        /* 🔹 Animations for the play/pause button */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 204, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
-        }
-        .play-button-main.playing {
-            animation: pulse 1.5s infinite;
-        }
-
-        /* 🔹 CSS for the audio visualizer */
-        .visualizer {
+        .nav-links {
             display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            width: 100px;
-            height: 30px;
-            gap: 4px;
-            margin-top: 1rem;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            gap: 2.5rem;
         }
 
-        .visualizer.active {
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff;
+        }
+
+        .nav-link:hover::before, .nav-link.active::before {
+            width: 100%;
+        }
+
+        /* Hero section - moved down */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 8rem 2rem 2rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+            z-index: 1;
+            margin-top: 6rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #60a5fa;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: #94a3b8;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .cta-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .cta-secondary {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            color: #60a5fa;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #fff, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Cards */
+        .about-grid, .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .about-card, .skill-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .about-card::before, .skill-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .about-card:hover::before, .skill-card:hover::before {
             opacity: 1;
         }
 
-        .bar {
-            width: 4px;
-            background-color: #ffcc00;
-            border-radius: 2px;
-            transform-origin: bottom;
-            animation: bounce 0.8s ease-in-out infinite alternate;
+        .about-card:hover, .skill-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
         }
 
-        .bar:nth-child(1) { animation-delay: 0s; }
-        .bar:nth-child(2) { animation-delay: 0.2s; }
-        .bar:nth-child(3) { animation-delay: 0.4s; }
-        .bar:nth-child(4) { animation-delay: 0.6s; }
-        .bar:nth-child(5) { animation-delay: 0.8s; }
-
-        @keyframes bounce {
-            0% { transform: scaleY(0.1); }
-            100% { transform: scaleY(1); }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            filter: grayscale(0.3) brightness(1.2);
         }
 
-        /* New custom class for a subtle jump on hover */
-        .subtle-jump-on-hover {
-            transition: transform 0.4s ease-in-out;
-            display: inline-block; /* Required for transform to work on inline elements */
-            cursor: pointer;
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #f1f5f9;
         }
 
-        .subtle-jump-on-hover:hover { transform: scale(1.07); }
+        .card-text {
+            color: #cbd5e1;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
 
-        .progress-bar-container {
-            width: 80%;
+        /* Skills progress */
+        .skill-progress {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .skill-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 1.5s ease;
+            width: 0;
+            border-radius: 10px;
+        }
+
+        .skill-card.visible .skill-fill {
+            width: var(--progress);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 4rem;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
         }
 
-        .progress-bar {
-            flex-grow: 1;
-            height: 4px;
-            background-color: rgba(255, 255, 255, 0.4);
-            border-radius: 9999px;
+        .timeline-content {
+            width: 45%;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.03);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            border: 4px solid #0f172a;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+        }
+
+        /* Contact Form with Authentication */
+        .contact-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .auth-tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
             position: relative;
         }
 
-        .progress {
-            height: 100%;
-            width: 0%;
-            background-color: white;
-            border-radius: 9999px;
+        .auth-tab.active {
+            color: #60a5fa;
+        }
+
+        .auth-tab.active::after {
+            content: '';
             position: absolute;
-            top: 0;
+            bottom: -1px;
             left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        }
+
+        .auth-container, .message-container {
+            display: none;
+        }
+
+        .auth-container.active, .message-container.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            color: #f1f5f9;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert.success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+
+        /* Music Player */
+        .music-player {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .album-art {
+            width: 100%;
+            max-width: 350px;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .album-art:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(59, 130, 246, 0.3);
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .player-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.3rem;
+        }
+
+        .player-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .play-btn {
+            width: 75px;
+            height: 75px;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            color: white;
         }
 
         .hidden-youtube {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            opacity: 0;
-            z-index: -1;
+            display: none;
         }
 
-        /* New styles for the goal section background effect */
-        #goal { position: relative; }
-
-        .goal-bg-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to right, #2c2c2c 50%, #7b4d3f 50%);
-            transform: scaleX(0); /* Start hidden */
-            transform-origin: left;
-            transition: transform 1s ease-in-out;
-            z-index: 5;
-        }
-
-        .goal-bg-overlay.visible { transform: scaleX(1); /* Wipes in */ }
-
-        /* Custom styles for the new JavaScript-based tooltip */
-        .js-tooltip {
-            position: absolute;
-            z-index: 1000; /* Increased z-index to ensure visibility */
-            background-color: #7b4d3f;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out;
-            max-width: 300px;
+        /* Footer */
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 3rem 2rem;
             text-align: center;
-            transform: translate(-50%, -100%); /* Position above the element */
-            margin-bottom: 10px;
+        }
+
+        .social-links {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            color: #60a5fa;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
 
-        .js-tooltip.visible { opacity: 1; }
+        .social-icon:hover {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+        }
 
-        .js-tooltip-image { width: 100%; height: auto; border-radius: 4px; object-fit: cover; }
-
-        .js-tooltip-text { font-size: 0.875rem; line-height: 1.4; }
-
-        /* New styles for the fade-in animation */
-        .fade-in-up {
+        /* Fade in animations */
+        .fade-in {
             opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
-        .fade-in-up.visible {
+
+        .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* 🔹 Keyframe animation for the floating glow effect */
-        @keyframes float {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.05); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-
-        .floating-glow {
-            position: fixed;
-            top: 20%;
-            left: 50%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 204, 0, 0.2) 0%, rgba(255, 204, 0, 0) 70%);
-            border-radius: 50%;
-            animation: float 10s ease-in-out infinite;
-            pointer-events: none;
-            z-index: -2;
-        }
-
-        /* ----------------------------
-           NEW: Goal content layout helpers (desktop preserved, mobile enhanced)
-           ---------------------------- */
-        .goal-content { display: flex; gap: 2rem; align-items: flex-start; width: 100%; max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .intro-column { width: 50%; padding-right: 2rem; z-index: 10; }
-        .music-column { width: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; }
-
-        /* Provide distinct backgrounds on mobile only (desktop remains visually similar to current) */
-        /* Mobile-specific styles below will apply when the viewport is small */
-
-        /* Prevent images/iframes from overflowing on small screens */
-        img, iframe { max-width: 100%; height: auto; }
-
-        /* Make the two-column area in #goal stack on smaller screens
-           (escape the slash in the class name so selector is valid) */
-        @media (max-width: 1024px) {
-            /* On tablets and below, make both halves full width so content doesn't get cramped */
-            #goal .w-1\/2 { width: 100% !important; flex-basis: 100% !important; }
-            .progress-bar-container { width: 70% !important; max-width: 420px; }
-            .floating-glow { width: 360px; height: 360px; top: 12%; }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            /* Stop background-attachment fixed which can be problematic on many phones */
-            body { background-attachment: scroll !important; }
+            .nav-links {
+                display: none;
+            }
 
-            /* Stack the goal content vertically on mobile and add distinct backgrounds */
-            .goal-content { flex-direction: column; align-items: stretch; padding: 1rem; gap: 1rem; }
-            .intro-column { width: 100% !important; padding: 1rem !important; background: rgba(44,44,44,0.92); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.45); transform: none !important; text-align: left; }
-            .music-column { width: 100% !important; padding: 1rem !important; background: rgba(123,77,63,0.92); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.45); margin-bottom: 1rem; }
+            .timeline::before {
+                left: 20px;
+            }
 
-            /* Strong override for the album-art container (it had inline width/height 500px) */
-            #goal .music-player-container > div { width: 92% !important; max-width: 420px !important; height: auto !important; }
-            /* Make the album art itself responsive and keep object-cover */
-            #album-art { width: 100% !important; height: auto !important; object-fit: cover; border-radius: 10px; }
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
 
-            /* Ensure intro text does not translate right on mobile and remains readable */
-            #intro-text { transform: none !important; padding-top: 1rem !important; }
-            #intro-heading, #about-heading { font-size: 1.8rem !important; }
+            .timeline-dot {
+                left: 20px;
+            }
 
-            /* Slightly tighten nav spacing on small screens without changing look */
-            .nav-button { padding: 6px 10px !important; font-size: 0.95rem !important; }
-            nav { right: 0.75rem !important; top: 0.5rem !important; }
+            .hero-content {
+                margin-top: 3rem;
+            }
 
-            /* Make visualizer less wide on very small screens */
-            .visualizer { width: 80px !important; }
-
-            /* Make footer less tall on small screens */
-            footer { padding: 0.5rem !important; }
-            footer .max-w-3xl { font-size: 11px !important; }
+            .album-art {
+                height: 280px;
+            }
         }
-
-        @media (max-width: 420px) {
-            .floating-glow { width: 220px; height: 220px; top: 8%; }
-            /* Small-scale headings so they remain readable on tiny phones */
-            #intro-heading, #about-heading { font-size: 1.6rem !important; }
-            /* Slightly reduce progress bar container spacing */
-            .progress-bar-container { width: 85% !important; }
-        }
-        /* End responsive overrides */
     </style>
 </head>
 <body>
-    <!-- 🔹 Floating Glow Element -->
-    <div class="floating-glow"></div>
-    
-    <!-- Top bar for consistent design -->
-    <div class="fixed top-0 left-0 right-0 h-10 bg-[#2c2c2c] rounded-b-full bg-opacity-70 backdrop-blur-sm z-40"></div>
+    <div class="gradient-bg"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
 
-    <!-- 🔹 Navigation Bar using Tailwind classes -->
-    <nav class="fixed top-5 right-10 z-50">
-        <div class="flex space-x-4 md:space-x-6">
-            <!-- The 'active-nav' class is now managed by JavaScript -->
-            <button data-target="home" class="nav-button font-normal text-base md:text-lg">Home</button>
-            <button data-target="goal" class="nav-button font-normal text-base md:text-lg">Intro</button>
-            <button data-target="about" class="nav-button font-normal text-base md:text-lg">About</button>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">MR</div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#journey" class="nav-link">Journey</a>
+                <a href="#music" class="nav-link">Music</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
         </div>
     </nav>
 
-    <!-- 🔹 Sections using Tailwind for responsiveness and layout -->
-    <section id="home" class="min-h-[150vh] flex flex-col items-center justify-center text-center p-4">
-        <h1 class="text-4xl md:text-6xl mb-6 subtle-jump-on-hover -mt-1" style="font-weight: 100; letter-spacing: 0.1em; text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);">M U H A M M E D&nbsp;&nbsp;R I S V A N</h1>
-        <p class="text-lg md:text-xl max-w-2xl -translate-y-8" style="font-weight: 100; letter-spacing: 0.07em;">
-            <span class="subtle-jump-on-hover">C O M P U T E R</span>&nbsp;&nbsp;&nbsp;
-            <span class="subtle-jump-on-hover">S C I E N C E</span>&nbsp;&nbsp;&nbsp;
-            <span class="subtle-jump-on-hover">S T U D E N T</span>&nbsp;&nbsp;&nbsp;
-            <span class="subtle-jump-on-hover">A N D</span>&nbsp;&nbsp;&nbsp;
-            <span class="subtle-jump-on-hover">A V I A T I O N</span>&nbsp;&nbsp;&nbsp;
-            <span class="subtle-jump-on-hover">E N T H U S I A S T</span>
-        </p>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">✨ Available for Opportunities</div>
+            <h1 class="hero-title">MUHAMMED RISVAN</h1>
+            <p class="hero-subtitle">Computer Science Student • Aviation Enthusiast • Tech Innovator</p>
+            <p class="hero-description">
+                Passionate about merging technology with aviation. Building the future through code, 
+                innovation, and a relentless drive to explore aerospace engineering.
+            </p>
+            <div class="cta-buttons">
+                <a href="#about" class="cta-btn cta-primary">Explore My Journey</a>
+                <a href="#contact" class="cta-btn cta-secondary">Send a Message</a>
+            </div>
+        </div>
     </section>
 
-    <!-- 🔹 Updated Goal section with the two-color background and new text position -->
-    <section id="goal" class="min-h-[150vh] flex items-center justify-start">
-        <div class="goal-bg-overlay"></div>
-
-        <!-- Goal content wrapper: two columns on desktop, stacked on mobile -->
-        <div class="goal-content">
-            <div id="intro-text" class="intro-column px-8 pt-32 text-left -translate-y-16 fade-in-up" style="z-index: 10;">
-                <h1 id="intro-heading" class="text-4xl md:text-6xl font-extrabold mb-4 subtle-jump-on-hover" style="text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);">Personal Introduction</h1>
-                <p id="intro-paragraph" class="text-lg md:text-xl leading-relaxed" style="transition-delay: 0.2s; font-weight: 300;">
-                Hello! I’m Muhammad Risvan, a student from <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="Ambayathode is a small hilly locality in Koduvally block, Kozhikode district, Kerala, situated about 32 km east of Kozhikode city" >Amabayathode</span>, Thamarassery, located in Kozhikode, Kerala.
-    My educational journey began at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="Nusrath Islamic Residential Higher Secondary School is located in Parappanpoyil, Kozhikode district, Kerala. It offers classes from Grade 1 to Grade 12, providing comprehensive education from primary to higher secondary level." data-tooltip-image="https://lh3.googleusercontent.com/p/AF1QipPf-QBwZlbvVjbH7akV_qoSmSDNt6Pu7Xl9q3sn=s1360-w1360-h1020-rw">Nusrath Islamic Residential HSS Parappanpoyil</span>, where I spent nine formative years from LKG to 7th grade. I then continued three enriching years at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="St. Mary’s HS Koodathai, established in 1946, is a private aided school in rural Koduvally, Kozhikode, offering classes from 1 to 12." data-tooltip-image="https://schoolwiki.in/images/b/bc/47070-5.jpg">St. Mary’s High School, Koodathai</span>, completing my 10th standard there. Currently, I am pursuing my 12th grade in Computer Science at <span class="tooltip-container text-accent-gold subtle-jump-on-hover" data-tooltip-text="GHSS KARUVANPOYIL was established in 2003 and it is managed by the Department of Education. It is located in Urban area. It is located in KODUVALLY block of KOZHIKODE district of Kerala. The school consists of Grades from LKG to 12." data-tooltip-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcSwkn3QsOHcDX7epSNJ57nx7W2fAqljuUa3QJB-Uf6et3wBd751fskkjcXGYCD-a7YXk&usqp=CAU">GHSS Karuvanpoyil</span>.
-
-    Beyond academics, I am deeply passionate about aviation and aeronautical sciences, fields that inspire my curiosity about technology, engineering, and the future of flight. I aspire to channel this passion into a career that blends innovation with real-world impact—whether through piloting, aeronautical engineering, or contributing to advanced aerospace technologies.
-
-    I am eager to explore opportunities that challenge me, help me grow, and ultimately allow me to play a role in shaping the next generation of aviation.
+    <!-- About Section -->
+    <section id="about" class="fade-in">
+        <h2 class="section-title">About Me</h2>
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="card-icon">👨‍💻</div>
+                <h3 class="card-title">Student Developer</h3>
+                <p class="card-text">
+                    Pursuing Computer Science at GHSS Karuvanpoyil with hands-on experience 
+                    in modern programming languages and development frameworks.
                 </p>
             </div>
+            
+            <div class="about-card">
+                <div class="card-icon">✈️</div>
+                <h3 class="card-title">Aviation Enthusiast</h3>
+                <p class="card-text">
+                    Fascinated by aerospace technology and aerodynamics. Aspiring to bridge 
+                    the gap between software engineering and aviation systems.
+                </p>
+            </div>
+            
+            <div class="about-card">
+                <div class="card-icon">🎨</div>
+                <h3 class="card-title">Creative Innovator</h3>
+                <p class="card-text">
+                    Designing mechanical concepts, gaming experiences, and 3D animations 
+                    that blend creativity with technical precision.
+                </p>
+            </div>
+            
+            <div class="about-card">
+                <div class="card-icon">🌟</div>
+                <h3 class="card-title">Problem Solver</h3>
+                <p class="card-text">
+                    From Ambayathode, Kozhikode. Always seeking elegant solutions to complex 
+                    challenges in technology and engineering.
+                </p>
+            </div>
+            
+            <div class="about-card">
+                <div class="card-icon">🎯</div>
+                <h3 class="card-title">Future Vision</h3>
+                <p class="card-text">
+                    Targeting aerospace engineering or cybersecurity careers, where innovation 
+                    meets real-world impact and technological advancement.
+                </p>
+            </div>
+            
+            <div class="about-card">
+                <div class="card-icon">🚀</div>
+                <h3 class="card-title">Lifelong Learner</h3>
+                <p class="card-text">
+                    Continuously exploring emerging technologies, AI, machine learning, 
+                    and the future of autonomous systems.
+                </p>
+            </div>
+        </div>
+    </section>
 
-            <!-- 🔹 Music Player (right column on desktop; stacks below text on mobile) -->
-            <div class="music-column">
-                <div class="music-player-container">
-                    <h2 class="text-2xl md:text-3xl font-extralight subtle-jump-on-hover">My Jam</h2>
-                    <!-- The image src is now updated dynamically by JavaScript -->
-                    <div class="w-full max-w-2xl flex-shrink-0 mt-8" style="height: 500px; width: 500px; cursor: pointer;">
-                        <img id="album-art" src="" alt="Album Art" class="w-full h-full rounded-lg shadow-xl shadow-black transition-opacity duration-500 object-cover transform transition-transform duration-300 hover:scale-105 hover:-translate-y-1">
-                    </div>
-                    <!-- 🔹 Animated Visualizer -->
-                    <div id="visualizer" class="visualizer">
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                    </div>
-
-                    <div class="song-info text-center mt-4">
-                        <p class="text-base font-thin">Jhol</p>
-                    </div>
-
-                    <div class="progress-bar-container max-w-xs mt-12">
-                        <span id="current-time" class="text-sm font-thin">00:00</span>
-                        <div class="progress-bar">
-                            <div id="progress" class="progress"></div>
-                        </div>
-                        <span id="duration-time" class="text-sm font-thin">00:00</span>
-                    </div>
-
-                    <!-- Custom music player controls -->
-                    <div class="music-player-controls">
-                        <button id="vol-down-btn" class="music-player-button subtle-jump-on-hover" aria-label="Volume down">-</button>
-                        <button id="play-pause-btn" class="music-player-button play-button-main subtle-jump-on-hover" aria-label="Play/Pause">✕</button>
-                        <button id="vol-up-btn" class="music-player-button subtle-jump-on-hover" aria-label="Volume up">+</button>
-                    </div>
-
-                    <!-- Hidden YouTube iframe -->
-                    <iframe id="youtube-player" class="hidden-youtube" width="560" height="315" src="https://www.youtube.com/embed/BWczaSneA0Q?enablejsapi=1&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <!-- Skills Section -->
+    <section id="skills" class="fade-in">
+        <h2 class="section-title">Technical Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="card-icon">💻</div>
+                <h3 class="card-title">Programming</h3>
+                <p class="card-text">Python, JavaScript, C++ expertise</p>
+                <div class="skill-progress">
+                    <div class="skill-fill" style="--progress: 85%;"></div>
+                </div>
+            </div>
+            
+            <div class="skill-card">
+                <div class="card-icon">🌐</div>
+                <h3 class="card-title">Web Development</h3>
+                <p class="card-text">Modern HTML, CSS, React frameworks</p>
+                <div class="skill-progress">
+                    <div class="skill-fill" style="--progress: 90%;"></div>
+                </div>
+            </div>
+            
+            <div class="skill-card">
+                <div class="card-icon">🛫</div>
+                <h3 class="card-title">Aviation Systems</h3>
+                <p class="card-text">Aerodynamics and flight mechanics</p>
+                <div class="skill-progress">
+                    <div class="skill-fill" style="--progress: 75%;"></div>
+                </div>
+            </div>
+            
+            <div class="skill-card">
+                <div class="card-icon">🎨</div>
+                <h3 class="card-title">3D Design</h3>
+                <p class="card-text">Blender, Photoshop mastery</p>
+                <div class="skill-progress">
+                    <div class="skill-fill" style="--progress: 80%;"></div>
+                </div>
+            </div>
+            
+            <div class="skill-card">
+                <div class="card-icon">🔒</div>
+                <h3 class="card-title">Cybersecurity</h3>
+                <p class="card-text">Ethical hacking fundamentals</p>
+                <div class="skill-progress">
+                    <div class="skill-fill" style="--progress: 70%;"></div>
+                </div>
+            </div>
+            
+            <div class="skill-card">
+                <div class="card-icon">🤖</div>
+                <h3 class="card-title">AI & ML</h3>
+                <p class="card-text">Machine learning model development</p>
+                <div class="skill-progress">
+                    <div class="skill-fill" style="--progress: 65%;"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 🔹 About Me section with fade-in-up animation on its child elements -->
-    <section id="about" class="min-h-[150vh] flex flex-col items-center justify-start text-center p-4">
-        <div class="w-full mt-24">
-            <h1 id="about-heading" class="text-4xl md:text-6xl font-extrabold mb-4 fade-in-up" style="text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);">About Me</h1>
-        </div>
-        <div id="about-boxes" class="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8 mt-12 w-full max-w-5xl">
-            <!-- First Box: Loved ones -->
-            <div class="flex-1 p-8 h-96 rounded-xl shadow-lg bg-gray-800 bg-opacity-50 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer fade-in-up">
-                <h2 class="text-3xl font-bold mb-4">Loved ones</h2>
-                <p class="text-sm md:text-base leading-relaxed text-center font-light">
-                    I share my life with my mother, father, and two younger sisters, whose support and encouragement mean everything to me.
-                </p>
+    <!-- Journey Timeline -->
+    <section id="journey" class="fade-in">
+        <h2 class="section-title">My Journey</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 style="color: #60a5fa; font-size: 1.5rem; margin-bottom: 0.5rem;">LKG - 7th Grade</h3>
+                    <h4 style="color: #94a3b8; margin-bottom: 1rem;">Nusrath Islamic Residential HSS</h4>
+                    <p style="color: #cbd5e1; line-height: 1.7;">
+                        Foundation years at Nusrath Islamic Residential HSS Parappanpoyil, 
+                        building core academic skills and discovering my passion for learning.
+                    </p>
+                </div>
             </div>
-            <!-- Second Box: Interest -->
-            <div class="flex-1 p-8 h-96 rounded-xl shadow-lg bg-gray-800 bg-opacity-50 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer fade-in-up" style="transition-delay: 0.2s;">
-                <h2 class="text-3xl font-bold mb-4">Interest</h2>
-                <p class="text-sm md:text-base leading-relaxed text-center font-light">
-                    I enjoy creating and experimenting with mechanical designs, gaming concepts, and animation, as they allow me to express creativity through technology.
-                </p>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 style="color: #60a5fa; font-size: 1.5rem; margin-bottom: 0.5rem;">8th - 10th Grade</h3>
+                    <h4 style="color: #94a3b8; margin-bottom: 1rem;">St. Mary's High School</h4>
+                    <p style="color: #cbd5e1; line-height: 1.7;">
+                        Transformative years at St. Mary's High School, Koodathai, 
+                        where I developed my technical interests and academic foundation.
+                    </p>
+                </div>
             </div>
-            <!-- Third Box: Calling -->
-            <div class="flex-1 p-8 h-96 rounded-xl shadow-lg bg-gray-800 bg-opacity-50 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer fade-in-up" style="transition-delay: 0.4s;">
-                <h2 class="text-3xl font-bold mb-4">Calling</h2>
-                <p class="text-sm md:text-base leading-relaxed text-center font-light">
-                    I feel a strong calling to build a future in aerospace or cyber security, where I can apply my skills to solve challenges and make an impact.
-                </p>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 style="color: #60a5fa; font-size: 1.5rem; margin-bottom: 0.5rem;">11th - 12th Grade</h3>
+                    <h4 style="color: #94a3b8; margin-bottom: 1rem;">GHSS Karuvanpoyil</h4>
+                    <p style="color: #cbd5e1; line-height: 1.7;">
+                        Currently specializing in Computer Science at GHSS Karuvanpoyil, 
+                        mastering programming and preparing for my tech career.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 style="color: #60a5fa; font-size: 1.5rem; margin-bottom: 0.5rem;">Future Aspirations</h3>
+                    <h4 style="color: #94a3b8; margin-bottom: 1rem;">Aerospace & Innovation</h4>
+                    <p style="color: #cbd5e1; line-height: 1.7;">
+                        Pursuing higher education in aerospace engineering or cybersecurity, 
+                        combining aviation passion with cutting-edge technology.
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- 🔹 Footer Bar with smooth curves -->
-    <footer class="bg-[#2c2c2c] p-4 text-center rounded-t-full bg-opacity-70 backdrop-blur-sm z-40 fixed bottom-0 left-0 right-0">
-        <div class="max-w-3xl mx-auto text-white text-xs cursor-pointer">
-            © 2025 Capnira. All rights reserved.<br>
-            Designed and Developed by MHD RISVAN.
+    <!-- Music Section -->
+    <section id="music" class="fade-in">
+        <h2 class="section-title">My Soundtrack</h2>
+        <div class="music-player">
+            <img id="albumArt" class="album-art" src="https://images.pexels.com/photos/10230830/pexels-photo-10230830.jpeg" alt="Album Art">
+            
+            <h3 style="font-size: 1.8rem; margin: 1.5rem 0; color: #f1f5f9; font-weight: 600;">Jhol</h3>
+            <p style="color: #94a3b8; margin-bottom: 1.5rem;">My favorite track</p>
+
+            <div class="player-controls">
+                <button class="player-btn" id="volDown">−</button>
+                <button class="player-btn play-btn" id="playBtn">▶</button>
+                <button class="player-btn" id="volUp">+</button>
+            </div>
+
+            <iframe id="youtubePlayer" class="hidden-youtube" 
+                    src="https://www.youtube.com/embed/BWczaSneA0Q?enablejsapi=1" 
+                    frameborder="0" allow="autoplay"></iframe>
         </div>
+    </section>
+
+    <!-- Contact Section with Authentication -->
+    <section id="contact" class="fade-in">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="signup">Sign Up</button>
+                <button class="auth-tab" data-tab="message">Send Message</button>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <!-- Login Form -->
+            <div class="auth-container active" id="loginContainer">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="loginEmail" class="form-input" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="loginPassword" class="form-input" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="auth-container" id="signupContainer">
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="signupName" class="form-input" required placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="signupEmail" class="form-input" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="signupPassword" class="form-input" required placeholder="Create a password">
+                    </div>
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+            </div>
+
+            <!-- Message Form (Only for authenticated users) -->
+            <div class="message-container" id="messageContainer">
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <input type="text" id="messageSubject" class="form-input" required placeholder="What's this about?">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Your Message</label>
+                        <textarea id="messageText" class="form-textarea" required placeholder="Write your message here..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" id="sendMessageBtn">Send Secure Message</button>
+                </form>
+                <p style="text-align: center; margin-top: 1.5rem; color: #94a3b8; font-size: 0.9rem;">
+                    🔒 Your email remains private. Messages are sent securely.
+                </p>
+            </div>
+
+            <p style="text-align: center; margin-top: 2rem; color: #64748b; font-size: 0.85rem;">
+                Login or sign up to send me a secure message
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="#" class="social-icon">Git</a>
+            <a href="#" class="social-icon">In</a>
+            <a href="#" class="social-icon">X</a>
+            <a href="#" class="social-icon">Ig</a>
+        </div>
+        <p style="font-size: 1.1rem; margin-bottom: 0.8rem; color: #cbd5e1;">
+            &copy; 2025 Muhammed Risvan
+        </p>
+        <p style="color: #64748b; font-size: 0.9rem;">
+            Crafted with innovation • Built with passion
+        </p>
     </footer>
 
     <script>
-        // -----------------------
-        // DOM references
-        // -----------------------
-        const navButtons = document.querySelectorAll(".nav-button");
-        const sections = document.querySelectorAll("section");
-        const playPauseBtn = document.getElementById("play-pause-btn");
-        const volDownBtn = document.getElementById("vol-down-btn");
-        const volUpBtn = document.getElementById("vol-up-btn");
-        const progressBar = document.getElementById("progress");
-        const currentTimeEl = document.getElementById("current-time");
-        const durationTimeEl = document.getElementById("duration-time");
-        const albumArt = document.getElementById("album-art");
-        const visualizer = document.getElementById("visualizer");
-        const goalBgOverlay = document.querySelector('.goal-bg-overlay');
-        const tooltipTargets = document.querySelectorAll(".tooltip-container");
-        const aboutHeading = document.getElementById('about-heading');
-        const aboutBoxes = document.getElementById('about-boxes');
-        const introHeading = document.getElementById('intro-heading');
-        const introParagraph = document.getElementById('intro-paragraph');
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("YOUR_EMAILJS_USER_ID"); // Replace with your EmailJS user ID
+        })();
 
-        // -----------------------
-        // Create tooltip element immediately (fixes timing issue)
-        // -----------------------
-        let tooltipEl = document.createElement('div');
-        tooltipEl.className = 'js-tooltip';
-        document.body.appendChild(tooltipEl);
+        // Simulated user storage (in real app, use backend)
+        let users = {};
+        let currentUser = null;
 
-        // Hide tooltip on scroll/resize for safety
-        window.addEventListener('scroll', () => tooltipEl.classList.remove('visible'), { passive: true });
-        window.addEventListener('resize', () => tooltipEl.classList.remove('visible'));
-
-        // -----------------------
-        // Tooltip listeners
-        // -----------------------
-        tooltipTargets.forEach(target => {
-            target.addEventListener('mouseenter', () => {
-                const tooltipText = target.getAttribute('data-tooltip-text');
-                const tooltipImage = target.getAttribute('data-tooltip-image');
-
-                if (!tooltipText && !tooltipImage) return;
-
-                // Populate tooltip
-                tooltipEl.innerHTML = '';
-                if (tooltipImage) {
-                    const imgEl = document.createElement('img');
-                    imgEl.src = tooltipImage;
-                    imgEl.className = 'js-tooltip-image';
-                    tooltipEl.appendChild(imgEl);
-                }
-                if (tooltipText) {
-                    const textEl = document.createElement('span');
-                    textEl.className = 'js-tooltip-text';
-                    textEl.textContent = tooltipText;
-                    tooltipEl.appendChild(textEl);
-                }
-
-                // Position correctly (account for page scroll)
-                const rect = target.getBoundingClientRect();
-                const tooltipX = (rect.left + window.scrollX) + rect.width / 2;
-                const tooltipY = rect.top + window.scrollY;
-
-                tooltipEl.style.left = `${tooltipX}px`;
-                tooltipEl.style.top = `${tooltipY}px`;
-                tooltipEl.classList.add('visible');
-            });
-
-            target.addEventListener('mouseleave', () => {
-                tooltipEl.classList.remove('visible');
-            });
-        });
-
-        // -----------------------
-        // Random album art images
-        // -----------------------
-        const imageUrls = [
-            "https://images.pexels.com/photos/10230830/pexels-photo-10230830.jpeg",
-            "https://images.pexels.com/photos/2927080/pexels-photo-2927080.jpeg",
-            "https://images.pexels.com/photos/1716580/pexels-photo-1716580.jpeg",
-            "https://images.pexels.com/photos/6686455/pexels-photo-6686455.jpeg",
-            "https://images.pexels.com/photos/11970796/pexels-photo-11970796.jpeg"
-        ];
-
-        function setRandomImage() {
-            const randomIndex = Math.floor(Math.random() * imageUrls.length);
-            albumArt.src = imageUrls[randomIndex];
-        }
-
-        window.addEventListener("load", setRandomImage);
-
-        // -----------------------
-        // YouTube Player API logic
-        // -----------------------
-        let player;
-        let isPlaying = false;
-
-        // Called by YouTube API when ready (global name required)
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            // Play/pause button toggles playback
-            playPauseBtn.addEventListener("click", () => {
-                if (!player) return;
-                if (isPlaying) {
-                    player.pauseVideo();
-                } else {
-                    player.playVideo();
-                }
-            });
-
-            // Volume down functionality
-            volDownBtn.addEventListener("click", () => {
-                if (!player) return;
-                let currentVolume = player.getVolume();
-                if (typeof currentVolume === 'number' && currentVolume > 0) {
-                    player.setVolume(Math.max(0, currentVolume - 10));
-                }
-            });
-
-            // Volume up functionality
-            volUpBtn.addEventListener("click", () => {
-                if (!player) return;
-                let currentVolume = player.getVolume();
-                if (typeof currentVolume === 'number' && currentVolume < 100) {
-                    player.setVolume(Math.min(100, currentVolume + 10));
-                }
-            });
-
-            // Set initial duration display (may be 0 until playback)
-            const dur = player.getDuration() || 0;
-            durationTimeEl.textContent = formatTime(dur);
-        }
-
-        function onPlayerStateChange(event) {
-            // YT.PlayerState.PLAYING === 1
-            if (event.data === YT.PlayerState.PLAYING) {
-                isPlaying = true;
-                playPauseBtn.textContent = "✓";
-                playPauseBtn.classList.add('playing');
-                visualizer.classList.add('active');
-                updateProgress(); // start progress loop
+        // Navigation scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
             } else {
-                isPlaying = false;
-                playPauseBtn.textContent = "✕";
-                playPauseBtn.classList.remove('playing');
-                visualizer.classList.remove('active');
+                navbar.classList.remove('scrolled');
             }
-        }
+        });
 
-        function updateProgress() {
-            if (!player || !isPlaying) return;
+        // Navigation links
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
 
-            const duration = player.getDuration() || 0;
-            const currentTime = player.getCurrentTime() || 0;
-            const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
-            progressBar.style.width = `${progressPercent}%`;
-
-            currentTimeEl.textContent = formatTime(currentTime);
-            durationTimeEl.textContent = formatTime(duration);
-
-            requestAnimationFrame(updateProgress);
-        }
-
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds) || seconds < 0) return "00:00";
-            const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // -----------------------
-        // Navigation and Scroll Logic
-        // -----------------------
-        navButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                // Remove 'active-nav' from all buttons
-                navButtons.forEach(btn => btn.classList.remove("active-nav"));
-                // Add 'active-nav' to the clicked button
-                button.classList.add("active-nav");
-
-                const targetId = button.getAttribute("data-target");
-                const targetElement = document.getElementById(targetId);
-                const offset = 100;
-
-                if (!targetElement) return;
-
-                if (targetId === 'goal') {
-                    const targetPosition = targetElement.offsetTop;
-                    window.scrollTo({
-                        top: targetPosition + offset,
-                        behavior: "smooth"
-                    });
-                } else {
-                    targetElement.scrollIntoView({ behavior: "smooth" });
-                }
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                targetSection.scrollIntoView({ behavior: 'smooth' });
             });
         });
 
-        // Add a scroll event listener to highlight the active nav button
-        window.addEventListener("scroll", () => {
+        // Scroll spy
+        window.addEventListener('scroll', () => {
             let current = '';
-            const scrollPos = window.scrollY + window.innerHeight / 2; // Check the position at the center of the viewport
-
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-
-                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
                     current = section.getAttribute('id');
                 }
             });
 
-            navButtons.forEach(button => {
-                button.classList.remove("active-nav");
-                if (button.getAttribute('data-target') === current) {
-                    button.classList.add('active-nav');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
                 }
             });
+        });
 
-            if (current === 'goal') {
-                goalBgOverlay.classList.add('visible');
-            } else {
-                goalBgOverlay.classList.remove('visible');
-            }
-
-            // Also ensure tooltip is hidden while scrolling (already attached earlier)
-        }, { passive: true });
-
-        // -----------------------
-        // Intersection Observer for fade-in effect on sections
-        // -----------------------
-        const elementsToAnimate = document.querySelectorAll('.fade-in-up');
-
-        const observer = new IntersectionObserver(entries => {
+        // Intersection Observer for animations
+        const fadeElements = document.querySelectorAll('.fade-in, .skill-card');
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
                 }
             });
         }, { threshold: 0.1 });
 
-        elementsToAnimate.forEach(element => { observer.observe(element); });
+        fadeElements.forEach(el => observer.observe(el));
 
+        // Tab switching
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authContainers = document.querySelectorAll('.auth-container');
+        const messageContainer = document.getElementById('messageContainer');
 
-        // A separate observer for the goal section's background
-        const goalObserverElement = document.getElementById('goal');
-        const goalObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    goalBgOverlay.classList.add('visible');
-                } else {
-                    goalBgOverlay.classList.remove('visible');
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                
+                authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                authContainers.forEach(c => c.classList.remove('active'));
+                messageContainer.classList.remove('active');
+                
+                if (targetTab === 'login') {
+                    document.getElementById('loginContainer').classList.add('active');
+                } else if (targetTab === 'signup') {
+                    document.getElementById('signupContainer').classList.add('active');
+                } else if (targetTab === 'message') {
+                    if (currentUser) {
+                        messageContainer.classList.add('active');
+                    } else {
+                        showAlert('Please login or sign up first to send a message', 'error');
+                        document.getElementById('loginContainer').classList.add('active');
+                        authTabs.forEach(t => t.classList.remove('active'));
+                        authTabs[0].classList.add('active');
+                    }
                 }
             });
-        }, { threshold: 0.5 }); // A slightly higher threshold for the background
+        });
 
-        goalObserver.observe(goalObserverElement);
+        // Show alert function
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert ${type} show`;
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 4000);
+        }
 
-        // -----------------------
-        // Load YouTube API script
-        // -----------------------
-        (function loadYouTubeAPI() {
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        })();
+        // Signup form
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
 
+            if (users[email]) {
+                showAlert('Email already registered. Please login.', 'error');
+                return;
+            }
+
+            users[email] = { name, password };
+            currentUser = { name, email };
+            
+            showAlert('Account created successfully! You can now send messages.', 'success');
+            document.getElementById('signupForm').reset();
+            
+            // Switch to message tab
+            authTabs[2].click();
+        });
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!users[email] || users[email].password !== password) {
+                showAlert('Invalid email or password', 'error');
+                return;
+            }
+
+            currentUser = { name: users[email].name, email };
+            showAlert(`Welcome back, ${currentUser.name}!`, 'success');
+            document.getElementById('loginForm').reset();
+            
+            // Switch to message tab
+            authTabs[2].click();
+        });
+
+        // Message form with EmailJS
+        document.getElementById('messageForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showAlert('Please login first', 'error');
+                return;
+            }
+
+            const subject = document.getElementById('messageSubject').value;
+            const message = document.getElementById('messageText').value;
+            const btn = document.getElementById('sendMessageBtn');
+            
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+
+            // EmailJS parameters
+            const templateParams = {
+                from_name: currentUser.name,
+                from_email: currentUser.email,
+                subject: subject,
+                message: message,
+                to_email: 'muhammedrisvan747@gmail.com'
+            };
+
+            // Send email using EmailJS
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(() => {
+                    showAlert('Message sent successfully! I\'ll get back to you soon.', 'success');
+                    document.getElementById('messageForm').reset();
+                })
+                .catch(() => {
+                    showAlert('Failed to send message. Please try again.', 'error');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = 'Send Secure Message';
+                });
+        });
+
+        // YouTube Player
+        let player;
+        let isPlaying = false;
+
+        window.onYouTubeIframeAPIReady = function() {
+            player = new YT.Player('youtubePlayer', {
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        };
+
+        function onPlayerStateChange(event) {
+            const playBtn = document.getElementById('playBtn');
+            if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                playBtn.textContent = '⏸';
+            } else {
+                isPlaying = false;
+                playBtn.textContent = '▶';
+            }
+        }
+
+        document.getElementById('playBtn').addEventListener('click', () => {
+            if (isPlaying) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        });
+
+        document.getElementById('volDown').addEventListener('click', () => {
+            const currentVol = player.getVolume();
+            player.setVolume(Math.max(0, currentVol - 10));
+        });
+
+        document.getElementById('volUp').addEventListener('click', () => {
+            const currentVol = player.getVolume();
+            player.setVolume(Math.min(100, currentVol + 10));
+        });
+
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+
+        // Random album art
+        const albumImages = [
+            "https://images.pexels.com/photos/10230830/pexels-photo-10230830.jpeg",
+            "https://images.pexels.com/photos/2927080/pexels-photo-2927080.jpeg",
+            "https://images.pexels.com/photos/1716580/pexels-photo-1716580.jpeg",
+            "https://images.pexels.com/photos/6686455/pexels-photo-6686455.jpeg"
+        ];
+        document.getElementById('albumArt').src = albumImages[Math.floor(Math.random() * albumImages.length)];
     </script>
 </body>
 </html>
